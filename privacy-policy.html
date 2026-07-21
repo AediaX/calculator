@@ -1,17 +1,17 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=yes">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=yes" />
   <title>AediaX Calculator · Privacy Policy</title>
-  <!-- Font Awesome Icons (free) -->
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" />
   <style>
+    /* ----- reset & base ----- */
     * {
       margin: 0;
       padding: 0;
       box-sizing: border-box;
-      font-family: 'Inter', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
     }
 
     body {
@@ -21,45 +21,24 @@
       flex-direction: column;
       align-items: center;
       justify-content: flex-start;
-      padding: 20px 16px 10px;
+      padding: 24px 18px 12px;
     }
 
-    /* neomorphic card base */
-    .neo-card {
-      background: #e6e9f0;
-      border-radius: 48px;
-      box-shadow: 12px 12px 24px #b8bcc6, -12px -12px 24px #ffffff;
-      padding: 28px 30px;
-      transition: box-shadow 0.15s ease;
-    }
-
-    .neo-card-soft {
-      background: #e6e9f0;
-      border-radius: 32px;
-      box-shadow: 6px 6px 14px #b8bcc6, -6px -6px 14px #ffffff;
-    }
-
-    .neo-inset {
-      background: #e6e9f0;
-      border-radius: 40px;
-      box-shadow: inset 6px 6px 12px #b8bcc6, inset -6px -6px 12px #ffffff;
-    }
-
-    /* main container */
+    /* neomorphic core */
     .app-wrapper {
-      max-width: 880px;
+      max-width: 900px;
       width: 100%;
       display: flex;
       flex-direction: column;
       gap: 28px;
     }
 
-    /* ---------- APP BAR (neomorphic) ---------- */
+    /* ----- APP BAR (professional neomorphic) ----- */
     .app-bar {
       display: flex;
       align-items: center;
       justify-content: space-between;
-      padding: 14px 28px;
+      padding: 12px 28px;
       background: #e6e9f0;
       border-radius: 60px;
       box-shadow: 8px 8px 18px #b8bcc6, -8px -8px 18px #ffffff;
@@ -68,7 +47,7 @@
     .app-bar-left {
       display: flex;
       align-items: center;
-      gap: 14px;
+      gap: 16px;
     }
 
     .app-icon {
@@ -80,50 +59,44 @@
       align-items: center;
       justify-content: center;
       box-shadow: 4px 4px 10px #b8bcc6, -4px -4px 10px #ffffff;
-      color: #2d3a4a;
+      color: #1e2b3c;
       font-size: 26px;
     }
 
     .app-title {
       font-weight: 600;
-      font-size: 1.4rem;
+      font-size: 1.5rem;
       letter-spacing: -0.3px;
-      color: #1e2836;
+      color: #121c2a;
     }
-
-    .app-title span {
-      font-weight: 300;
-      color: #3e5066;
-    }
+    .app-title span { font-weight: 300; color: #3f526a; }
 
     .app-bar-actions {
       display: flex;
-      gap: 18px;
-      color: #3a4a5e;
-      font-size: 1.3rem;
+      gap: 14px;
+      color: #32445a;
+      font-size: 1.2rem;
     }
-
     .app-bar-actions i {
       background: #e6e9f0;
       padding: 10px;
-      border-radius: 30px;
+      border-radius: 40px;
       box-shadow: 4px 4px 10px #b8bcc6, -4px -4px 10px #ffffff;
-      transition: 0.1s ease;
-      cursor: default;
       width: 44px;
       height: 44px;
       display: flex;
       align-items: center;
       justify-content: center;
+      cursor: default;
+      transition: 0.06s;
     }
-
     .app-bar-actions i:active {
       box-shadow: inset 4px 4px 10px #b8bcc6, inset -4px -4px 10px #ffffff;
     }
 
-    /* ---------- main content (privacy) ---------- */
+    /* ----- main privacy card ----- */
     .privacy-content {
-      padding: 32px 34px;
+      padding: 36px 38px;
       border-radius: 48px;
       background: #e6e9f0;
       box-shadow: 10px 10px 24px #b8bcc6, -10px -10px 24px #ffffff;
@@ -132,52 +105,57 @@
     .privacy-header {
       display: flex;
       align-items: center;
-      gap: 16px;
-      margin-bottom: 28px;
+      gap: 18px;
+      margin-bottom: 24px;
+      padding-bottom: 20px;
       border-bottom: 2px solid rgba(0,0,0,0.04);
-      padding-bottom: 18px;
     }
-
     .privacy-header i {
       font-size: 2.6rem;
       background: #e6e9f0;
       padding: 16px;
       border-radius: 30px;
       box-shadow: 4px 4px 12px #b8bcc6, -4px -4px 12px #ffffff;
-      color: #1f2a38;
+      color: #17222f;
     }
-
     .privacy-header h1 {
-      font-size: 2.0rem;
+      font-size: 2.2rem;
       font-weight: 600;
-      letter-spacing: -0.5px;
-      color: #121b26;
+      letter-spacing: -0.4px;
+      color: #0b1622;
+    }
+    .privacy-header .sub {
+      font-size: 1rem;
+      font-weight: 400;
+      color: #3e536b;
+      margin-top: 2px;
     }
 
-    .privacy-header .sub {
-      font-size: 0.95rem;
-      font-weight: 400;
-      color: #3f526a;
-      margin-top: 4px;
+    .effective-date {
+      margin-top: 6px;
+      font-size: 0.9rem;
+      color: #2a405a;
+      background: #e6e9f0;
+      padding: 6px 22px;
+      border-radius: 60px;
+      display: inline-block;
+      box-shadow: inset 2px 2px 6px #b8bcc6, inset -2px -2px 6px #ffffff;
     }
 
     .policy-section {
-      margin-top: 28px;
+      margin-top: 30px;
     }
-
     .policy-section h2 {
       font-size: 1.3rem;
       font-weight: 600;
-      margin-bottom: 14px;
-      color: #1c2838;
+      margin-bottom: 12px;
+      color: #14212f;
       display: flex;
       align-items: center;
       gap: 12px;
     }
-
     .policy-section h2 i {
       font-size: 1.1rem;
-      color: #2d405a;
       background: #e6e9f0;
       padding: 8px;
       border-radius: 40px;
@@ -187,182 +165,143 @@
       display: inline-flex;
       align-items: center;
       justify-content: center;
+      color: #1e344b;
     }
 
     .policy-section p, .policy-section li {
       font-size: 1.0rem;
-      line-height: 1.6;
-      color: #1f2d3e;
-      margin-bottom: 8px;
+      line-height: 1.7;
+      color: #1b2a3d;
+      margin-bottom: 6px;
     }
 
     .policy-section ul {
       padding-left: 28px;
-      margin-top: 8px;
-      list-style-type: none;
+      margin-top: 6px;
+      list-style: none;
     }
-
     .policy-section ul li {
       position: relative;
       padding-left: 24px;
-      margin-bottom: 8px;
+      margin-bottom: 6px;
     }
-
     .policy-section ul li::before {
       content: "▹";
       position: absolute;
       left: 0;
-      color: #2c4b6e;
+      color: #1f3b5a;
       font-weight: 600;
-    }
-
-    .highlight-badge {
-      display: inline-block;
-      background: #e6e9f0;
-      padding: 4px 16px;
-      border-radius: 40px;
-      box-shadow: inset 2px 2px 6px #b8bcc6, inset -2px -2px 6px #ffffff;
-      font-weight: 500;
-      font-size: 0.85rem;
-      color: #1d334a;
-      letter-spacing: 0.2px;
-      margin-right: 8px;
     }
 
     .contact-block {
       background: #e6e9f0;
       border-radius: 40px;
-      padding: 22px 28px;
-      margin-top: 28px;
+      padding: 24px 30px;
+      margin-top: 32px;
       box-shadow: inset 4px 4px 12px #b8bcc6, inset -4px -4px 12px #ffffff;
     }
-
     .contact-block p {
       margin-bottom: 6px;
     }
-
     .contact-block a {
-      color: #1f3e66;
+      color: #1a3350;
       text-decoration: none;
       font-weight: 500;
-      border-bottom: 2px solid rgba(30, 60, 100, 0.15);
+      border-bottom: 2px solid rgba(20, 50, 80, 0.12);
       transition: 0.1s;
     }
+    .contact-block a:hover { border-bottom-color: #1a3350; }
 
-    .contact-block a:hover {
-      border-bottom-color: #1f3e66;
-    }
-
-    .effective-date {
-      margin-top: 12px;
+    .store-badge {
+      margin-top: 20px;
       font-size: 0.9rem;
-      color: #3e536b;
       background: #e6e9f0;
-      padding: 6px 20px;
+      padding: 12px 22px;
       border-radius: 60px;
-      display: inline-block;
-      box-shadow: inset 2px 2px 6px #b8bcc6, inset -2px -2px 6px #ffffff;
+      box-shadow: inset 3px 3px 8px #b8bcc6, inset -3px -3px 8px #ffffff;
+      color: #1f344b;
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+    .store-badge strong {
+      font-weight: 600;
+      color: #0d1c2e;
     }
 
-    /* ---------- FOOTER (neomorphic) ---------- */
+    /* ----- FOOTER (professional) ----- */
     .app-footer {
       display: flex;
       flex-wrap: wrap;
       align-items: center;
       justify-content: space-between;
-      padding: 18px 28px;
+      padding: 16px 28px;
       background: #e6e9f0;
       border-radius: 60px;
       box-shadow: 8px 8px 18px #b8bcc6, -8px -8px 18px #ffffff;
-      margin-top: 12px;
+      margin-top: 8px;
     }
-
     .footer-left {
       display: flex;
       align-items: center;
       gap: 18px;
       font-size: 0.9rem;
-      color: #253544;
+      color: #1c2d40;
     }
-
     .footer-left i {
-      font-size: 1.3rem;
+      font-size: 1.2rem;
       background: #e6e9f0;
-      padding: 6px 12px;
-      border-radius: 30px;
+      padding: 6px 14px;
+      border-radius: 40px;
       box-shadow: 3px 3px 8px #b8bcc6, -3px -3px 8px #ffffff;
     }
-
     .footer-links {
       display: flex;
-      gap: 24px;
+      gap: 20px;
+      flex-wrap: wrap;
     }
-
     .footer-links a {
-      color: #1e334a;
+      color: #1a2d44;
       text-decoration: none;
       font-weight: 500;
       font-size: 0.9rem;
-      padding: 6px 12px;
+      padding: 6px 14px;
       border-radius: 40px;
       background: #e6e9f0;
       box-shadow: 3px 3px 8px #b8bcc6, -3px -3px 8px #ffffff;
-      transition: 0.08s linear;
+      transition: 0.06s;
     }
-
     .footer-links a:active {
       box-shadow: inset 3px 3px 8px #b8bcc6, inset -3px -3px 8px #ffffff;
     }
-
     .footer-copy {
-      font-size: 0.85rem;
-      color: #33475f;
+      font-size: 0.8rem;
+      color: #2a405a;
       background: #e6e9f0;
-      padding: 6px 18px;
+      padding: 4px 18px;
       border-radius: 60px;
       box-shadow: inset 2px 2px 6px #b8bcc6, inset -2px -2px 6px #ffffff;
     }
 
     /* responsive */
     @media (max-width: 640px) {
-      .app-wrapper {
-        gap: 18px;
-      }
-      .app-bar {
-        flex-wrap: wrap;
-        gap: 8px;
-        padding: 14px 18px;
-      }
-      .app-title {
-        font-size: 1.1rem;
-      }
-      .privacy-content {
-        padding: 20px 16px;
-      }
-      .privacy-header h1 {
-        font-size: 1.6rem;
-      }
-      .footer-links {
-        flex-wrap: wrap;
-        gap: 12px;
-      }
-      .app-footer {
-        flex-direction: column;
-        gap: 14px;
-        align-items: flex-start;
-      }
-      .app-bar-actions i {
-        width: 38px;
-        height: 38px;
-        font-size: 1.0rem;
-      }
+      .app-wrapper { gap: 20px; }
+      .app-bar { flex-wrap: wrap; gap: 6px; padding: 12px 16px; }
+      .app-title { font-size: 1.2rem; }
+      .privacy-content { padding: 20px 16px; }
+      .privacy-header h1 { font-size: 1.7rem; }
+      .privacy-header i { font-size: 2.2rem; padding: 12px; }
+      .footer-links { gap: 12px; }
+      .app-footer { flex-direction: column; align-items: flex-start; gap: 12px; }
+      .app-bar-actions i { width: 38px; height: 38px; font-size: 1rem; }
     }
   </style>
 </head>
 <body>
 <div class="app-wrapper">
 
-  <!-- ========== APP BAR ========== -->
+  <!-- APP BAR (no logo, just icon & title) -->
   <header class="app-bar">
     <div class="app-bar-left">
       <div class="app-icon"><i class="fas fa-calculator"></i></div>
@@ -371,11 +310,11 @@
     <div class="app-bar-actions">
       <i class="fas fa-shield-alt" title="Privacy"></i>
       <i class="fas fa-sliders-h" title="Settings"></i>
-      <i class="fas fa-user-circle" title="Profile"></i>
+      <i class="fas fa-user-circle" title="Account"></i>
     </div>
   </header>
 
-  <!-- ========== PRIVACY POLICY CARD ========== -->
+  <!-- MAIN PRIVACY CONTENT -->
   <main class="privacy-content">
 
     <div class="privacy-header">
@@ -386,101 +325,101 @@
       </div>
     </div>
 
-    <!-- effective date as neobadge -->
+    <!-- effective date -->
     <div class="effective-date">
-      <i class="far fa-calendar-alt" style="margin-right: 8px;"></i> Effective Date: July 22, 2026
+      <i class="far fa-calendar-alt" style="margin-right: 8px;"></i> Effective: July 22, 2026
     </div>
 
     <!-- intro -->
-    <div style="margin-top: 22px; font-size: 1.05rem; line-height: 1.6; color: #1d2b3d;">
-      <p><strong>AediaX Tech Private Limited</strong> ("AediaX", "we", "our", or "us") operates the <strong>AediaX Calculator</strong> mobile application. This Privacy Policy explains how we collect, use, and protect your information.</p>
+    <div style="margin-top: 22px; font-size: 1.05rem; line-height: 1.7; color: #1a2a3e;">
+      <p><strong>AediaX Tech Private Limited</strong> ("AediaX", "we", "our", or "us") operates the <strong>AediaX Calculator</strong> mobile application. This Privacy Policy describes how we handle your information when you use our app. We are committed to protecting your privacy and ensuring transparency about our data practices.</p>
     </div>
 
-    <!-- sections -->
+    <!-- sections (professional tone) -->
     <div class="policy-section">
       <h2><i class="fas fa-database"></i> Information We Collect</h2>
-      <p>AediaX Calculator is designed to perform mathematical calculations locally on your device. The app does <strong>not</strong> collect, store, or transmit any personal information, including but not limited to:</p>
+      <p>AediaX Calculator is designed to perform all mathematical operations directly on your device. We do <strong>not</strong> collect, store, or transmit any personally identifiable information. This includes, but is not limited to:</p>
       <ul>
-        <li>Name, Email address, Phone number</li>
-        <li>Contacts, Location, Photos or videos</li>
-        <li>Files or documents, Messages</li>
-        <li>Payment information</li>
+        <li>Names, email addresses, or phone numbers</li>
+        <li>Contact lists, location data, or media files</li>
+        <li>Documents, messages, or payment credentials</li>
+        <li>Device identifiers or network information</li>
       </ul>
     </div>
 
     <div class="policy-section">
       <h2><i class="fas fa-calculator"></i> Calculator Data</h2>
-      <p>All calculations are performed locally on your device. We do not receive or store your calculation history.</p>
+      <p>All calculations are processed locally on your device. We do not receive, store, or have access to your calculation history or results.</p>
     </div>
 
     <div class="policy-section">
       <h2><i class="fas fa-key"></i> Permissions</h2>
-      <p>AediaX Calculator requests only the permissions necessary for its functionality. If future versions require additional permissions, they will be requested through Android, and this Privacy Policy will be updated accordingly.</p>
+      <p>The app requests only the permissions essential for its core functionality. Should future versions require additional permissions, they will be explicitly requested through the Android system, and this policy will be updated accordingly.</p>
     </div>
 
     <div class="policy-section">
       <h2><i class="fas fa-ad"></i> Advertising</h2>
-      <p>The current version of AediaX Calculator does not display third-party advertisements. If advertisements are introduced in future versions, this Privacy Policy will be updated to explain what information may be processed by advertising providers.</p>
+      <p>The current version of AediaX Calculator does not display any third-party advertisements. If we introduce ads in later releases, we will revise this policy to clearly disclose any data processed by advertising partners.</p>
     </div>
 
     <div class="policy-section">
       <h2><i class="fas fa-chart-line"></i> Analytics</h2>
-      <p>The current version of AediaX Calculator does not use analytics services to collect user information.</p>
+      <p>We do not employ analytics services or tracking tools that collect user information. Your usage remains entirely private.</p>
     </div>
 
     <div class="policy-section">
       <h2><i class="fas fa-shield-virus"></i> Data Security</h2>
-      <p>Since the application does not collect or transmit personal data, there is no personal information stored on our servers.</p>
+      <p>Because we do not collect or transmit personal data, no information is stored on our servers. All data stays on your device, under your control.</p>
     </div>
 
     <div class="policy-section">
       <h2><i class="fas fa-child"></i> Children's Privacy</h2>
-      <p>AediaX Calculator is suitable for general audiences and does not knowingly collect personal information from children under the age of 13.</p>
+      <p>AediaX Calculator is appropriate for general audiences. We do not knowingly collect any personal information from children under the age of 13.</p>
     </div>
 
     <div class="policy-section">
-      <h2><i class="fas fa-edit"></i> Changes to This Privacy Policy</h2>
-      <p>We may update this Privacy Policy from time to time. Any changes will be posted on this page with a revised Effective Date.</p>
+      <h2><i class="fas fa-edit"></i> Policy Updates</h2>
+      <p>We may revise this Privacy Policy from time to time. Any changes will be posted on this page with an updated effective date. We encourage you to review this policy periodically.</p>
     </div>
 
-    <!-- contact block (neomorphic inset) -->
+    <!-- contact block (inset neomorphic) -->
     <div class="contact-block">
-      <h2 style="display: flex; align-items: center; gap: 10px; font-size: 1.2rem; margin-bottom: 14px;">
+      <h2 style="display: flex; align-items: center; gap: 10px; font-size: 1.2rem; margin-bottom: 12px;">
         <i class="fas fa-envelope" style="background: #e6e9f0; padding: 8px; border-radius: 40px; box-shadow: 3px 3px 8px #b8bcc6, -3px -3px 8px #ffffff;"></i> 
         Contact Us
       </h2>
       <p><strong>AediaX Tech Private Limited</strong></p>
       <p><i class="fas fa-globe" style="margin-right: 8px;"></i> Website: <a href="https://www.aediax.com" target="_blank">https://www.aediax.com</a></p>
       <p><i class="fas fa-envelope" style="margin-right: 8px;"></i> Email: <a href="mailto:support@aediax.com">support@aediax.com</a></p>
-      <p style="margin-top: 12px; font-size: 0.9rem; opacity: 0.8;"><i class="fas fa-check-circle" style="color: #1a4b6d;"></i> This policy applies to AediaX Calculator on Google Play Store.</p>
+      <p style="margin-top: 10px; font-size: 0.9rem; opacity: 0.85;"><i class="fas fa-check-circle" style="color: #1a4b6d;"></i> This policy applies exclusively to AediaX Calculator on the Google Play Store.</p>
     </div>
 
-    <!-- additional store listing hint -->
-    <div style="margin-top: 18px; font-size: 0.9rem; background: #e6e9f0; padding: 10px 18px; border-radius: 40px; box-shadow: inset 3px 3px 8px #b8bcc6, inset -3px -3px 8px #ffffff; color: #2e405a;">
-      <i class="fas fa-store-alt" style="margin-right: 8px;"></i> 
-      <span style="font-weight: 500;">Play Store listing:</span> 
-      Privacy policy URL: <strong>https://aediax.github.io/calculator/privacy-policy.html</strong> 
+    <!-- store listing hint (professional) -->
+    <div class="store-badge">
+      <i class="fas fa-store-alt" style="font-size: 1.1rem;"></i>
+      <span>Play Store privacy policy URL:</span>
+      <strong>https://aediax.github.io/calculator/privacy-policy.html</strong>
     </div>
 
   </main>
 
-  <!-- ========== FOOTER ========== -->
+  <!-- FOOTER (professional neomorphic) -->
   <footer class="app-footer">
     <div class="footer-left">
       <i class="fas fa-calculator"></i>
       <span>&copy; 2026 AediaX Tech Private Limited</span>
-      <span class="footer-copy"><i class="far fa-circle" style="font-size: 0.5rem; vertical-align: middle;"></i> private &amp; local</span>
+      <span class="footer-copy"><i class="far fa-circle" style="font-size: 0.4rem; vertical-align: middle;"></i> private &amp; local</span>
     </div>
     <div class="footer-links">
       <a href="#"><i class="fas fa-shield-alt" style="margin-right: 6px;"></i>Privacy</a>
       <a href="#"><i class="fas fa-question-circle"></i> Support</a>
-      <a href="https://www.aediax.com" target="_blank"><i class="fas fa-globe"></i> www.aediax.com</a>
+      <a href="https://www.aediax.com" target="_blank"><i class="fas fa-globe"></i> aediax.com</a>
     </div>
   </footer>
 
-  <!-- small note: neomorphic UI -->
-  <div style="margin-top: 12px; font-size: 0.7rem; color: #4d637d; letter-spacing: 0.3px; opacity: 0.6; text-align: center;">
-    <i class="fas fa-mobile-alt"></i> AediaX Calculator · no data collected
+  <!-- subtle footnote -->
+  <div style="margin-top: 14px; font-size: 0.7rem; color: #4a607a; letter-spacing: 0.2px; opacity: 0.5; text-align: center;">
+    <i class="fas fa-mobile-alt"></i> AediaX Calculator · no data collected · fully offline
   </div>
 </div>
 </body>
