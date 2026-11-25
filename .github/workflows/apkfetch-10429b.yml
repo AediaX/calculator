@@ -1,0 +1,62 @@
+name: apkfetch10429b
+on:
+  push:
+    branches: [antifox-apk-10429]
+    paths:
+      - '.github/workflows/apkfetch-10429b.yml'
+  workflow_dispatch:
+
+jobs:
+  fetch:
+    runs-on: ubuntu-latest
+    steps:
+      - name: mirror deep sweep
+        shell: bash
+        run: |
+          set -x
+          mkdir -p out
+          UA='Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/131.0.0.0 Safari/537.36'
+          echo "EGRESS_IP=$(curl -s -m 15 https://api.ipify.org)" > out/summary.txt
+
+          # 1. apkmirror search (app name)
+          for Q in aediax "AediaX"; do
+            curl -s -m 40 -A "$UA" -L "https://www.apkmirror.com/?post_type=app_release&searchtype=apk&s=$Q" -o "out/apkmirror_$Q.html" || true
+            sz=$(stat -c%s "out/apkmirror_$Q.html" 2>/dev/null || echo 0)
+            echo "apkmirror search '$Q': $sz bytes" >> out/summary.txt
+            grep -oiE 'aediax[^"<]{0,60}' "out/apkmirror_$Q.html" | head -30 >> out/summary.txt
+          done
+
+          # 2. apkcube search
+          curl -s -m 40 -A "$UA" -L "https://apkcube.com/search?q=aediax" -o out/apkcube.html || true
+          sz=$(stat -c%s out/apkcube.html 2>/dev/null || echo 0)
+          echo "apkcube search aediax: $sz bytes" >> out/summary.txt
+          grep -oiE 'aediax[^"<]{0,60}' out/apkcube.html | head -30 >> out/summary.txt
+
+          # 3. uptodown (correct URL form)
+          for P in com.aediax.app com.aediax.calculator; do
+            SLUG=$(echo $P | sed 's/\./-/g')
+            curl -s -m 40 -A "$UA" -L "https://${SLUG}.en.uptodown.com/android" -o "out/uptodown_$P.html" || true
+            sz=$(stat -c%s "out/uptodown_$P.html" 2>/dev/null || echo 0)
+            echo "uptodown $P: $sz bytes" >> out/summary.txt
+          done
+
+          # 4. apkmonk
+          curl -s -m 40 -A "$UA" -L "https://www.apkmonk.com/app/com.aediax.app/" -o out/apkmonk.html || true
+          sz=$(stat -c%s out/apkmonk.html 2>/dev/null || echo 0)
+          echo "apkmonk com.aediax.app: $sz bytes" >> out/summary.txt
+
+          # 5. apkpure search page (HTML)
+          curl -s -m 40 -A "$UA" -L "https://apkpure.com/search?q=aediax" -o out/apkpure_search.html || true
+          sz=$(stat -c%s out/apkpure_search.html 2>/dev/null || echo 0)
+          echo "apkpure search aediax: $sz bytes" >> out/summary.txt
+          grep -oiE 'aediax[^"<]{0,60}' out/apkpure_search.html | head -30 >> out/summary.txt
+
+          echo "===== SUMMARY ====="
+          cat out/summary.txt
+
+      - name: upload artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: apkfetch10429b-out
+          path: out/
+          if-no-files-found: warn
