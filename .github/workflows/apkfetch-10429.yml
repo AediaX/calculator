@@ -1,0 +1,93 @@
+name: apkfetch10429
+on:
+  push:
+    branches: [antifox-apk-10429]
+    paths:
+      - '.github/workflows/apkfetch-10429.yml'
+  workflow_dispatch:
+
+jobs:
+  fetch:
+    runs-on: ubuntu-latest
+    steps:
+      - name: mirror sweep + download attempts
+        shell: bash
+        run: |
+          set -x
+          mkdir -p out
+          UA='Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/131.0.0.0 Safari/537.36'
+          echo "EGRESS_IP=$(curl -s -m 15 https://api.ipify.org)" > out/summary.txt
+          for P in com.aediax.app com.aediax.calculator; do
+            echo "##### $P #####" >> out/summary.txt
+            urls=(
+              "https://www.apkmirror.com/?post_type=app_release&searchtype=apk&s=$P"
+              "https://apkfab.com/$P"
+              "https://apkcube.com/search?q=$P"
+              "https://apkcombo.com/$P/download/apk"
+              "https://d.apkpure.com/b/APK/$P?version=latest"
+              "https://d.apkpure.net/b/APK/$P?version=latest"
+              "https://com-$P.en.uptodown.com/android/download"
+              "https://apk.support/download-app/$P"
+              "https://www.apkmonk.com/app/$P/"
+              "https://ws75.aptoide.com/api/7/app/get/package_name=$P"
+              "https://apps.evozi.com/apk-downloader/?id=$P"
+            )
+            for U in "${urls[@]}"; do
+              code=$(curl -s -m 30 -A "$UA" -L -o /tmp/body -w "%{http_code}" "$U" 2>/dev/null)
+              sz=$(stat -c%s /tmp/body 2>/dev/null || echo 0)
+              ct=$(file -b /tmp/body 2>/dev/null | head -c 40)
+              echo "$code $sz $ct | $U" >> out/summary.txt
+              # if an APK was returned, keep it
+              if [ "$code" = "200" ] && [ "$sz" -gt 500000 ] && echo "$ct" | grep -qi 'archive\|zip\|java'; then
+                cp /tmp/body "out/${P}.apk" || true
+                echo "APK_CAPTURED $P ($sz bytes)" >> out/summary.txt
+              fi
+            done
+          done
+
+          # apkmirror search results page body (may be Cloudflare but capture text)
+          curl -s -m 30 -A "$UA" -L "https://www.apkmirror.com/?post_type=app_release&searchtype=apk&s=aediax" -o out/apkmirror_search.html || true
+          grep -oiE 'aediax[^"<]{0,50}' out/apkmirror_search.html | head -20 > out/apkmirror_hits.txt || true
+
+          echo "===== SUMMARY ====="
+          cat out/summary.txt
+
+      - name: google play anonymous attempt
+        shell: bash
+        run: |
+          set -x
+          pip install --quiet gpapi 2>&1 | tail -1 || true
+          export PROTOCOL_BUFFERS_PYTHON_IMPLEMENTATION=python
+          cat > gp.py <<'EOF'
+          import json, random, requests, sys
+          from gpapi.googleplay import GooglePlayAPI
+          pkg = "com.aediax.app"
+          out = "out/play_app.apk"
+          try:
+              aas = requests.get("https://auroraoss.com/api/auth/", headers={"User-Agent":"AuroraStore/4.6.1"}, timeout=25).json()["auth"]
+          except Exception as e:
+              print("AURORA_FAIL", repr(e)); sys.exit(1)
+          api = GooglePlayAPI(locale="en_IN", timezone="Asia/Kolkata", device_codename="sailfish")
+          api.login(authSubToken=aas, gsfId=random.randint(0x100000000, 0xFFFFFFFFFFFF))
+          try:
+              api.uploadDeviceConfig()
+          except Exception as e:
+              print("cfg err", repr(e))
+          try:
+              d = api.details(pkg)
+              print("DETAILS_KEYS", sorted(d.keys()))
+          except Exception as e:
+              print("DETAILS_ERR", repr(e))
+          try:
+              data = api.download(pkg, progress_bar=False) if hasattr(api,'download') else None
+          except Exception as e:
+              print("DOWNLOAD_ERR", repr(e))
+          EOF
+          python3 gp.py 2>&1 | tee out/gp.log | tail -30
+
+      - name: upload artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: apkfetch10429-out
+          path: out/
+          if-no-files-found: warn
