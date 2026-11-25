@@ -1,0 +1,49 @@
+name: apkfetch10429e
+on:
+  push:
+    branches: [antifox-apk-10429]
+    paths:
+      - '.github/workflows/apkfetch-10429e.yml'
+  workflow_dispatch:
+
+jobs:
+  fetch:
+    runs-on: ubuntu-latest
+    steps:
+      - name: apkcube full capture
+        shell: bash
+        run: |
+          set -x
+          mkdir -p out
+          UA='Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/131.0.0.0 Safari/537.36'
+          echo "EGRESS_IP=$(curl -s -m 15 https://api.ipify.org)" > out/summary.txt || true
+          for P in com.aediax.app com.aediax.calculator; do
+            SLUG="aediax-tech-private-limited"
+            curl -s -m 40 -A "$UA" -L "https://apkcube.com/$SLUG/$P/download" -o "out/${P}.download.html" || true
+            echo "##### $P download page bytes: $(stat -c%s out/${P}.download.html 2>/dev/null || echo 0) #####" >> out/summary.txt || true
+          done
+          # extract download URLs from the app page too
+          for P in com.aediax.app com.aediax.calculator; do
+            SLUG="aediax-tech-private-limited"
+            curl -s -m 40 -A "$UA" -L "https://apkcube.com/$SLUG/$P" -o "out/${P}.app.html" || true
+            echo "##### $P app page bytes: $(stat -c%s out/${P}.app.html 2>/dev/null || echo 0) #####" >> out/summary.txt || true
+          done
+
+          # Extract ALL hrefs and URL-looking strings from both pages
+          for f in out/*.html; do
+            echo "=== $f hrefs ===" >> out/summary.txt
+            grep -oaE 'href="[^"]+"' "$f" | sort -u >> out/summary.txt || true
+            echo "=== $f urls ===" >> out/summary.txt
+            grep -oaE 'https?://[^"<> ]+' "$f" | sort -u >> out/summary.txt || true
+            echo "=== $f inline js urls ===" >> out/summary.txt
+            grep -oaE "https?[^'\"<> ]+\.apk[^'\"<> ]*|/download/[^'\"<> ]+|/get/[^'\"<> ]+|/apkfile/[^'\"<> ]+|downloadUrl[^,;]*|window\.location[^;]*" "$f" | sort -u | head -40 >> out/summary.txt || true
+          done
+          echo "===== SUMMARY =====" >> out/summary.txt
+          cat out/summary.txt || true
+
+      - name: upload artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: apkfetch10429e-out
+          path: out/
+          if-no-files-found: warn
