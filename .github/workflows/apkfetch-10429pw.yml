@@ -1,0 +1,118 @@
+name: apkfetch10429pw
+on:
+  push:
+    branches: [antifox-apk-10429]
+    paths:
+      - '.github/workflows/apkfetch-10429pw.yml'
+  workflow_dispatch:
+
+jobs:
+  fetch:
+    runs-on: ubuntu-latest
+    steps:
+      - name: install playwright
+        shell: bash
+        run: |
+          pip install --quiet playwright 2>&1 | tail -1 || true
+          python -m playwright install --with-deps chromium 2>&1 | tail -3 || true
+
+      - name: playwright download
+        shell: bash
+        run: |
+          mkdir -p out
+          cat > pw.py <<'EOF'
+          import asyncio, sys
+          from playwright.async_api import async_playwright
+
+          async def main():
+              pkg = sys.argv[1]
+              url = f"https://apkcube.com/aediax-tech-private-limited/{pkg}/download"
+              async with async_playwright() as p:
+                  browser = await p.chromium.launch(headless=True)
+                  ctx = await browser.new_context(
+                      user_agent="Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/131.0.0.0 Safari/537.36",
+                      accept_downloads=True,
+                  )
+                  page = await ctx.new_page()
+                  captured = []
+                  # capture .apk network responses too
+                  async def on_response(resp):
+                      try:
+                          if ".apk" in resp.url.lower() or resp.headers.get("content-type","").startswith("application/vnd.android"):
+                              print("APK_RESPONSE", resp.status, resp.url[:120])
+                              captured.append(resp)
+                      except Exception:
+                          pass
+                  page.on("response", on_response)
+                  try:
+                      await page.goto(url, wait_until="domcontentloaded", timeout=60000)
+                  except Exception as e:
+                      print("GOTO_ERR", repr(e))
+                  await page.wait_for_timeout(4000)
+                  print("TITLE", await page.title())
+                  # find download button
+                  btns = page.locator("button, a").filter(has_text="Download")
+                  n = await btns.count()
+                  print("DOWNLOAD_BTNS", n)
+                  for i in range(n):
+                      b = btns.nth(i)
+                      try:
+                          txt = (await b.inner_text() or "").strip().replace("\n"," ")
+                          print("BTN", i, repr(txt[:60]))
+                      except Exception:
+                          pass
+                  # click the biggest "Download APK" button
+                  clicked = False
+                  for i in range(n):
+                      b = btns.nth(i)
+                      try:
+                          txt = (await b.inner_text() or "").strip()
+                      except Exception:
+                          continue
+                      if "download" in txt.lower() and "apk" in txt.lower():
+                          try:
+                              async with page.expect_download(timeout=60000) as dl_info:
+                                  await b.click()
+                              dl = await dl_info.value
+                              path = await dl.path()
+                              print("DOWNLOADED", dl.suggested_filename, "->", path)
+                              import shutil
+                              shutil.copy(path, f"out/{pkg}.apk")
+                              clicked = True
+                              break
+                          except Exception as e:
+                              print("CLICK_ERR", i, repr(e))
+                  if not clicked:
+                      # fallback: try clicking the first download button and wait for any download
+                      for i in range(n):
+                          b = btns.nth(i)
+                          try:
+                              async with page.expect_download(timeout=45000) as dl_info:
+                                  await b.click()
+                              dl = await dl_info.value
+                              path = await dl.path()
+                              print("DOWNLOADED_FALLBACK", i, dl.suggested_filename)
+                              import shutil
+                              shutil.copy(path, f"out/{pkg}.apk")
+                              clicked = True
+                              break
+                          except Exception as e:
+                              print("FALLBACK_ERR", i, repr(e))
+                      await page.wait_for_timeout(5000)
+                  await page.wait_for_timeout(3000)
+                  # also capture the final URL (maybe redirected to apk)
+                  print("FINAL_URL", page.url)
+                  await browser.close()
+
+          asyncio.run(main())
+          EOF
+          python3 pw.py com.aediax.app 2>&1 | tee out/pw_app.log | tail -40 || true
+          python3 pw.py com.aediax.calculator 2>&1 | tee out/pw_calc.log | tail -40 || true
+          ls -la out/
+
+      - name: upload artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: apkfetch10429pw-out
+          path: out/
+          if-no-files-found: warn
