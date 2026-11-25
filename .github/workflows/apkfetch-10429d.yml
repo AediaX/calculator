@@ -1,0 +1,41 @@
+name: apkfetch10429d
+on:
+  push:
+    branches: [antifox-apk-10429]
+    paths:
+      - '.github/workflows/apkfetch-10429d.yml'
+  workflow_dispatch:
+
+jobs:
+  fetch:
+    runs-on: ubuntu-latest
+    steps:
+      - name: apkcube deep download
+        shell: bash
+        run: |
+          set -x
+          mkdir -p out
+          UA='Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/131.0.0.0 Safari/537.36'
+          echo "EGRESS_IP=$(curl -s -m 15 https://api.ipify.org)" > out/summary.txt
+
+          for P in com.aediax.app com.aediax.calculator; do
+            SLUG="aediax-tech-private-limited"
+            DL="https://apkcube.com/$SLUG/$P/download"
+            curl -s -m 40 -A "$UA" -L "$DL" -o "out/${P}.download.html" || true
+            echo "##### $P download page bytes: $(stat -c%s out/${P}.download.html 2>/dev/null || echo 0) #####" >> out/summary.txt
+            # all hrefs
+            grep -oE 'href="[^"]+"' "out/${P}.download.html" | sort -u >> out/summary.txt
+            # URL-like strings (cdn / get / dl / apk / json)
+            grep -oE 'https?://[^"'\''< ]+' "out/${P}.download.html" | grep -iE 'apk|cdn|get|dl|download|file|json' | sort -u | head -40 >> out/summary.txt
+            # data-url / data-href / JS vars
+            grep -oE 'data-(url|href|file|link)="[^"]+"' "out/${P}.download.html" | sort -u | head -20 >> out/summary.txt
+          done
+          echo "===== SUMMARY ====="
+          cat out/summary.txt
+
+      - name: upload artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: apkfetch10429d-out
+          path: out/
+          if-no-files-found: warn
