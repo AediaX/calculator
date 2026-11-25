@@ -1,0 +1,59 @@
+name: apkfetch10429c
+on:
+  push:
+    branches: [antifox-apk-10429]
+    paths:
+      - '.github/workflows/apkfetch-10429c.yml'
+  workflow_dispatch:
+
+jobs:
+  fetch:
+    runs-on: ubuntu-latest
+    steps:
+      - name: apkcube download
+        shell: bash
+        run: |
+          set -x
+          mkdir -p out
+          UA='Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/131.0.0.0 Safari/537.36'
+          echo "EGRESS_IP=$(curl -s -m 15 https://api.ipify.org)" > out/summary.txt
+
+          for P in com.aediax.app com.aediax.calculator; do
+            echo "##### $P #####" >> out/summary.txt
+            SLUG="aediax-tech-private-limited"
+            BASE="https://apkcube.com/$SLUG/$P"
+            # app page
+            curl -s -m 40 -A "$UA" -L "$BASE" -o "out/${P}.html" || true
+            echo "app page bytes: $(stat -c%s out/${P}.html 2>/dev/null || echo 0)" >> out/summary.txt
+            grep -oE 'href="[^"]*"' "out/${P}.html" | grep -iE 'download|\.apk|/apk|version' | sort -u | head -30 >> out/summary.txt
+            # version strings
+            grep -oE '[0-9]+\.[0-9]+(\.[0-9]+)?' "out/${P}.html" | sort -u | head -10 >> out/summary.txt
+          done
+
+          # Try to download com.aediax.app using common apkcube patterns
+          echo "=== download attempts ===" >> out/summary.txt
+          P=com.aediax.app
+          for U in \
+            "https://apkcube.com/aediax-tech-private-limited/com.aediax.app/download" \
+            "https://apkcube.com/download/com.aediax.app" \
+            "https://apkcube.com/com.aediax.app/download" \
+            "https://apkcube.com/aediax-tech-private-limited/com.aediax.app?v=gyxn5y" ; do
+            code=$(curl -s -m 60 -A "$UA" -L -D /tmp/hdr -o /tmp/body -w "%{http_code}" "$U" 2>/dev/null || true)
+            sz=$(stat -c%s /tmp/body 2>/dev/null || echo 0)
+            final=$(grep -i '^location:' /tmp/hdr 2>/dev/null | tail -1 | sed 's/^[Ll]ocation: //' | tr -d '\r')
+            echo "$code $sz final=$final | $U" >> out/summary.txt
+            if [ "$sz" -gt 100000 ] && head -c 4 /tmp/body | grep -q 'PK'; then
+              cp /tmp/body out/com.aediax.app.apk
+              echo "APK_CAPTURED $sz bytes from $U" >> out/summary.txt
+            fi
+          done
+
+          echo "===== SUMMARY ====="
+          cat out/summary.txt
+
+      - name: upload artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: apkfetch10429c-out
+          path: out/
+          if-no-files-found: warn
